@@ -8,6 +8,7 @@
 namespace Queue\Shell\Task;
 
 use Cake\Console\ConsoleIo;
+use Exception;
 
 /**
  * A Simple QueueTask example.
@@ -69,7 +70,7 @@ class QueueRetryExampleTask extends QueueTask {
 		 * Adding a task of type 'example' with no additionally passed data
 		 */
 		if ($this->QueuedJobs->createJob('RetryExample', null)) {
-			$this->out('OK, job created, now run the worker');
+			$this->success('OK, job created, now run the worker');
 		} else {
 			$this->err('Could not create Job');
 		}
@@ -82,7 +83,8 @@ class QueueRetryExampleTask extends QueueTask {
 	 *
 	 * @param array $data The array passed to QueuedJobsTable::createJob()
 	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
+	 * @return void
+	 * @throws \Exception
 	 */
 	public function run(array $data, $jobId) {
 		$count = (int)file_get_contents($this->file);
@@ -95,18 +97,13 @@ class QueueRetryExampleTask extends QueueTask {
 		if ($count < 3) {
 			$count++;
 			file_put_contents($this->file, (string)$count);
-			$this->out(' ->Sry, the Retry Example Job failed. Try again.<-');
-			$this->out(' ');
-			$this->out(' ');
-			return false;
+			// or $this->abort(' ->Sry, the Retry Example Job failed. Try again.<-');
+			throw new Exception((' ->Sry, the Retry Example Job failed. Try again.<-'));
 		}
 
-		$this->out(' ->Success, the Retry Example Job was run.<-');
-		$this->out(' ');
-		$this->out(' ');
+		$this->success(' ->Success, the Retry Example Job was run.<-');
 
 		unlink($this->file);
-		return true;
 	}
 
 }

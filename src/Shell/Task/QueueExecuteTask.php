@@ -7,6 +7,8 @@
 
 namespace Queue\Shell\Task;
 
+use RuntimeException;
+
 /**
  * Execute a Local command on the server.
  */
@@ -64,7 +66,7 @@ class QueueExecuteTask extends QueueTask {
 	 *
 	 * @param array $data The array passed to QueuedJobsTable::createJob()
 	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
+	 * @return void
 	 */
 	public function run(array $data, $jobId) {
 		$command = escapeshellcmd($data['command']);
@@ -76,7 +78,9 @@ class QueueExecuteTask extends QueueTask {
 		exec($command, $output, $status);
 		$this->out(' ');
 		$this->out($output);
-		return !$status;
+		if ($status) {
+			throw new RuntimeException('Failed with error code ' . $status . ': `' . $command . '`');
+		}
 	}
 
 }

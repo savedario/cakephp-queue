@@ -119,7 +119,7 @@ You can set two main things on each task as property: timeout and retries.
 	public $retries = 1;
 ```
 Make sure you set the timeout high enough so that it could never run longer than this, otherwise you risk it being re-run while still being run.
-I recommend setting it to at least 2x the maximum possible execution length.
+I recommend setting it to at least 2x the maximum possible execution length. See "Concurrent workers" below.
 
 Set the retries to at least 1, otherwise it will never execute again after failure in the first run.
 
@@ -134,7 +134,7 @@ namespace App\Shell\Task;
 
 ...
 
-class QueueYourNameForItTask extends QueueTask {
+class QueueYourNameForItTask extends QueueTask implements QueueTaskInterface {
 
 	/**
 	 * @var int
@@ -149,20 +149,18 @@ class QueueYourNameForItTask extends QueueTask {
 	/**
 	 * @param array $data The array passed to QueuedJobsTable::createJob()
 	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
+	 * @return void
 	 */
 	public function run(array $data, $jobId) {
 		$this->loadModel('FooBars');
 		if (!$this->FooBars->doSth()) {
 			throw new RuntimeException('Couldnt do sth.');
 		}
-
-		return true;
 	}
 	
 }
 ```
-Make sure it returns a boolean result (true ideally), or otherwise throws an exception with a clear error message.
+Make sure it throws an exception with a clear error message in case of failure.
 
 ## Usage
 

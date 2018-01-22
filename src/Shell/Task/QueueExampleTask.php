@@ -49,7 +49,7 @@ class QueueExampleTask extends QueueTask {
 		 * Adding a task of type 'example' with no additionally passed data
 		 */
 		if ($this->QueuedJobs->createJob('Example', null)) {
-			$this->out('OK, job created, now run the worker');
+			$this->success('OK, job created, now run the worker');
 		} else {
 			$this->err('Could not create Job');
 		}
@@ -62,16 +62,13 @@ class QueueExampleTask extends QueueTask {
 	 *
 	 * @param array $data The array passed to QueuedJobsTable::createJob()
 	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
+	 * @return void
 	 */
 	public function run(array $data, $jobId) {
 		$this->hr();
 		$this->out('CakePHP Queue Example task.');
 		$this->hr();
-		$this->out(' ->Success, the Example Job was run.<-');
-		$this->out(' ');
-		$this->out(' ');
-		return true;
+		$this->success(' ->Success, the Example Job was run.<-');
 	}
 
 }

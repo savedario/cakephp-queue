@@ -15,7 +15,7 @@ use Cake\Console\Shell;
  * Common Queue plugin tasks properties and methods to be extended by custom
  * tasks.
  */
-class QueueTask extends Shell {
+abstract class QueueTask extends Shell implements QueueTaskInterface {
 
 	/**
 	 * @var string
@@ -60,25 +60,11 @@ class QueueTask extends Shell {
 	}
 
 	/**
-	 * Add functionality.
+	 * Add functionality. Optional.
 	 *
 	 * @return void
 	 */
 	public function add() {
-	}
-
-	/**
-	 * Run functionality.
-	 *
-	 * This function is executed, when a worker is executing a task.
-	 * The return parameter will determine if the task will be marked completed, or be re-queued.
-	 *
-	 * @param array $data The array passed to QueuedJobsTable::createJob()
-	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
-	 */
-	public function run(array $data, $jobId) {
-		return true;
 	}
 
 }

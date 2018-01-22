@@ -47,7 +47,7 @@ class QueueProgressExampleTask extends QueueTask {
 			'duration' => 2 * MINUTE
 		];
 		if ($this->QueuedJobs->createJob('ProgressExample', $data)) {
-			$this->out('OK, job created, now run the worker');
+			$this->success('OK, job created, now run the worker');
 		} else {
 			$this->err('Could not create Job');
 		}
@@ -62,7 +62,7 @@ class QueueProgressExampleTask extends QueueTask {
 	 *
 	 * @param array $data The array passed to QueuedJobsTable::createJob()
 	 * @param int $jobId The id of the QueuedJob entity
-	 * @return bool Success
+	 * @return void
 	 */
 	public function run(array $data, $jobId) {
 		$this->hr();
@@ -77,10 +77,7 @@ class QueueProgressExampleTask extends QueueTask {
 		$this->QueuedJobs->updateProgress($jobId, 1);
 
 		$this->hr();
-		$this->out(' ->Success, the ProgressExample Job was run.<-');
-		$this->out(' ');
-		$this->out(' ');
-		return true;
+		$this->success(' ->Success, the ProgressExample Job was run.<-');
 	}
 
 }
