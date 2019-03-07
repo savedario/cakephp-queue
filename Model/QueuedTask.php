@@ -80,6 +80,7 @@ class QueuedTask extends QueueAppModel {
  * @return array            Created Job array containing id, data, ...
  */
 	public function createJob($jobName, $data = null, $notBefore = null, $group = null, $reference = null) {
+		$conf = (array)Configure::read('Queue');
 		$data = [
 			'jobtype' => $jobName,
 			'data' => json_encode($data),
@@ -92,7 +93,8 @@ class QueuedTask extends QueueAppModel {
 			$data['notbefore'] = date('Y-m-d H:i:s', strtotime($notBefore));
 		}
 		$this->create();
-		return $this->save($data);
+		$options = (isset($conf['createJob']['save_options'])) ? $conf['createJob']['save_options'] : [];
+		return $this->save($data, $options);
 	}
 
 /**
