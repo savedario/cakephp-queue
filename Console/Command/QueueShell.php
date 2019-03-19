@@ -266,15 +266,15 @@ class QueueShell extends AppShell {
 		if (method_exists($this->{$taskname},'beforeRun')) {
 			$return = $this->{$taskname}->beforeRun($data['data'],$data['id']);
 		}
-		if (!$return) {
-			return false;
-		}
-		$return = $this->{$taskname}->run($data['data'], $data['id']);
-		if (!$return) {
-			return false;
+		if ($return) {
+			$return = $this->{$taskname}->run($data['data'], $data['id']);
 		}
 		if (method_exists($this->{$taskname},'afterRun')) {
-			$this->{$taskname}->afterRun($data['data'],$data['id']);
+			if ($return) {
+				$this->{$taskname}->afterRun($data['data'], $data['id']);
+			} else {
+				$this->{$taskname}->afterRun(false);
+			}
 		}
 		return $return;
 	}
